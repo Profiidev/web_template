@@ -5,7 +5,7 @@ edition = "2024"
 
 [dependencies]
 sea-orm = "1.1.16"
-serde = { version = "1.0.223", features = ["derive"] }
+serde = { version = "1.0.226", features = ["derive"] }
 
 [lib]
 name = "entity"
