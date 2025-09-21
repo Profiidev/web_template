@@ -13,7 +13,7 @@ impl<'db> DummyTable<'db> {
   pub async fn save(&self) -> Result<(), DbErr> {
     let model = dummy::ActiveModel {
       test: Set("Test".into()),
-      ..Default::default()
+      id: Set(Uuid::new_v4()),
     };
 
     model.insert(self.db).await?;

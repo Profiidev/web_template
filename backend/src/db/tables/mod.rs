@@ -13,7 +13,7 @@ impl<'db> Tables<'db> {
     Self { db }
   }
 
-  pub fn key(self) -> DummyTable<'db> {
+  pub fn dummy(self) -> DummyTable<'db> {
     DummyTable::new(self.db)
   }
 }

@@ -1,25 +1,23 @@
+use std::{ops::Deref, time::Duration};
+
+use axum::Extension;
+use derive_util::FromReqExtension;
 use migration::MigratorTrait;
-use pool::SeaOrmPool;
-use rocket::{
-  fairing::{self, AdHoc},
-  Build, Rocket,
-};
-use sea_orm::DatabaseConnection;
-use sea_orm_rocket::Database;
+use sea_orm::{ConnectOptions, DatabaseConnection};
 use tables::Tables;
 
-mod pool;
+use crate::{config::Config, router_extension};
+
 pub mod tables;
 
-#[derive(Database, Debug)]
-#[database("sea_orm")]
-pub struct DB(SeaOrmPool);
+#[derive(Debug, FromReqExtension, Clone)]
+pub struct DB(DatabaseConnection);
 
-impl DB {
-  pub fn attach(rocket: Rocket<Build>) -> Rocket<Build> {
-    rocket
-      .attach(DB::init())
-      .attach(AdHoc::try_on_ignite("Migrations", run_migrations))
+impl Deref for DB {
+  type Target = DatabaseConnection;
+
+  fn deref(&self) -> &Self::Target {
+    &self.0
   }
 }
 
@@ -33,8 +31,22 @@ impl DBTrait for DatabaseConnection {
   }
 }
 
-async fn run_migrations(rocket: Rocket<Build>) -> fairing::Result {
-  let conn = &DB::fetch(&rocket).unwrap().conn;
-  let _ = migration::Migrator::up(conn, None).await;
-  Ok(rocket)
-}
+router_extension!(
+  async fn db(self, config: &Config) -> Self {
+    let mut options = ConnectOptions::new(&config.db_url);
+    options
+      .max_connections(1024)
+      .min_connections(0)
+      .connect_timeout(Duration::from_secs(5))
+      .sqlx_logging(config.db_logging);
+
+    let conn = sea_orm::Database::connect(options)
+      .await
+      .expect("Failed to connect to database");
+    migration::Migrator::up(&conn, None)
+      .await
+      .expect("Failed to run migrations");
+
+    self.layer(Extension(DB(conn)))
+  }
+);

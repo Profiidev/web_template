@@ -1,8 +1,10 @@
-use rocket::{http::Status, response::Responder, serde::json};
+use axum::response::{IntoResponse, Response};
+use http::StatusCode;
 use thiserror::Error;
 
 pub type Result<T> = std::result::Result<T, Error>;
 
+#[allow(unused)]
 #[derive(Error, Debug)]
 pub enum Error {
   #[error("BadRequest")]
@@ -16,49 +18,26 @@ pub enum Error {
   Conflict,
   #[error("Gone")]
   Gone,
-  #[error("SerdeJson Error {source:?}")]
-  SerdeJson {
-    #[from]
-    source: json::serde_json::Error,
-  },
-  #[error("NotFound")]
-  DB {
-    #[from]
-    source: sea_orm::DbErr,
-  },
-  #[error("Uuid Error {source:?}")]
-  Uuid {
-    #[from]
-    source: uuid::Error,
-  },
-  #[error("Jwt Error {source:?}")]
-  Jwt {
-    #[from]
-    source: jsonwebtoken::errors::Error,
-  },
-  #[error("Io Error {source:?}")]
-  IO {
-    #[from]
-    source: std::io::Error,
-  },
-  #[error("Reqwest Error {source:?}")]
-  Reqwest {
-    #[from]
-    source: reqwest::Error,
-  },
+  #[error(transparent)]
+  DB(#[from] sea_orm::DbErr),
+  #[error(transparent)]
+  Uuid(#[from] uuid::Error),
+  #[error(transparent)]
+  IO(#[from] std::io::Error),
+  #[error(transparent)]
+  InvalidHeaderValue(#[from] http::header::InvalidHeaderValue),
 }
 
-impl<'r, 'o: 'r> Responder<'r, 'o> for Error {
-  fn respond_to(self, request: &'r rocket::Request<'_>) -> rocket::response::Result<'o> {
-    log::error!("{:?}", &self);
+impl IntoResponse for Error {
+  fn into_response(self) -> Response {
+    tracing::error!("{:?}", &self);
     match self {
-      Self::Unauthorized => Status::Unauthorized.respond_to(request),
-      Self::Gone => Status::Gone.respond_to(request),
-      Self::InternalServerError | Self::Reqwest { .. } => {
-        Status::InternalServerError.respond_to(request)
-      }
-      Self::Conflict => Status::Conflict.respond_to(request),
-      _ => Status::BadRequest.respond_to(request),
+      Self::BadRequest => StatusCode::BAD_REQUEST.into_response(),
+      Self::Unauthorized => StatusCode::UNAUTHORIZED.into_response(),
+      Self::InternalServerError => StatusCode::INTERNAL_SERVER_ERROR.into_response(),
+      Self::Conflict => StatusCode::CONFLICT.into_response(),
+      Self::Gone => StatusCode::GONE.into_response(),
+      _ => StatusCode::BAD_REQUEST.into_response(),
     }
   }
 }

@@ -1,76 +1,81 @@
-use cors::cors;
-use db::DB;
+use std::net::SocketAddr;
+
+use axum::{serve, Extension, Router};
+use clap::Parser;
 #[cfg(debug_assertions)]
 use dotenv::dotenv;
-use fern::Dispatch;
-use rocket::{
-  fairing::{self, AdHoc},
-  launch, Build, Config, Rocket, Route,
-};
-use sea_orm_rocket::Database;
+use tokio::{net::TcpListener, signal};
 
+use crate::{config::Config, cors::cors};
+
+mod config;
 mod cors;
 mod db;
 mod dummy;
 mod error;
+mod logging;
+mod macros;
 
-#[launch]
-async fn rocket() -> _ {
+#[tokio::main]
+async fn main() {
   #[cfg(debug_assertions)]
   dotenv().ok();
 
-  let level = std::env::var("RUST_LOG")
-    .unwrap_or("warn".into())
-    .parse()
-    .expect("Failed to parse RUST_LOG");
+  let config = Config::parse();
+  tracing_subscriber::fmt()
+    .with_max_level(config.log_level)
+    .init();
 
-  Dispatch::new()
-    .chain(Box::new(env_logger::builder().build()) as Box<dyn log::Log>)
-    .level(level)
-    .apply()
-    .expect("Failed to initialize logger");
+  let addr = SocketAddr::from(([0, 0, 0, 0], config.port));
+  let listener = TcpListener::bind(addr)
+    .await
+    .expect("Failed to bind to address");
 
-  let cors = cors();
+  let app = router().state(&config).await.layer(Extension(config));
 
-  let url = std::env::var("DB_URL").expect("Failed to load DB_URL");
-  let sqlx_logging = std::env::var("DB_LOGGING")
-    .map(|s| s.parse::<bool>().unwrap_or(false))
-    .unwrap_or(false);
-
-  let figment = Config::figment()
-    .merge(("address", "0.0.0.0"))
-    .merge(("log_level", "normal"))
-    .merge((
-      "databases.sea_orm",
-      sea_orm_rocket::Config {
-        url,
-        min_connections: None,
-        max_connections: 1024,
-        connect_timeout: 5,
-        idle_timeout: None,
-        sqlx_logging,
-      },
-    ));
-
-  let server = rocket::custom(figment)
-    .attach(cors)
-    .manage(rocket_cors::catch_all_options_routes())
-    .mount("/", routes());
-
-  let server = state(server);
-  DB::attach(server).attach(AdHoc::try_on_ignite("DB States init", init_state_with_db))
+  serve(listener, app)
+    .with_graceful_shutdown(shutdown_signal())
+    .await
+    .expect("Server failed");
 }
 
-fn routes() -> Vec<Route> {
-  dummy::routes().into_iter().collect()
+fn router() -> Router {
+  dummy::router()
 }
 
-fn state(server: Rocket<Build>) -> Rocket<Build> {
-  dummy::state(server)
-}
+router_extension!(
+  async fn state(self, config: &Config) -> Self {
+    use db::db;
+    use dummy::dummy;
+    use logging::logging;
 
-async fn init_state_with_db(server: Rocket<Build>) -> fairing::Result {
-  let db = &DB::fetch(&server).unwrap().conn;
+    self
+      .db(config)
+      .await
+      .layer(cors(config).expect("Failed to create CORS layer"))
+      .logging()
+      .await
+      .dummy()
+      .await
+  }
+);
 
-  Ok(server)
+async fn shutdown_signal() {
+  let ctrl_c = async {
+    signal::ctrl_c()
+      .await
+      .expect("failed to install Ctrl+C handler");
+  };
+
+  let terminate = async {
+    signal::unix::signal(signal::unix::SignalKind::terminate())
+      .expect("failed to install signal handler")
+      .recv()
+      .await;
+  };
+
+  tokio::select! {
+      _ = ctrl_c => {},
+      _ = terminate => {},
+  }
 }
