@@ -1,0 +1,66 @@
+services:
+  frontend:
+    image: ghcr.io/profiidev/images/node-alpine-dev:main
+    volumes:
+      - ./frontend:/app/frontend
+      - ./node_modules:/app/node_modules
+      - ./package-lock.json:/app/package-lock.json
+      - ./package.json:/app/package.json
+    tty: true
+    networks:
+      - nginx
+    command: npm run dev -- --host
+
+  backend:
+    image: ghcr.io/profiidev/images/rust-musl-watch:main
+    volumes:
+      - ./backend:/app
+    networks:
+      - nginx
+    tty: true
+    entrypoint: ['tini', '--']
+    command: ['cargo', 'watch', '-x', 'run']
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - '1420:1420'
+    networks:
+      - nginx
+    environment:
+      - NGINX_ENTRYPOINT_QUIET_LOGS=1
+    depends_on:
+      - frontend
+      - backend
+
+  postgres:
+    image: postgres:latest
+    restart: unless-stopped
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=test
+      - POSTGRES_USER=test
+      - POSTGRES_DB=test
+    networks:
+      - nginx
+    ports:
+      - '9301:5432'
+    healthcheck:
+      test: ['CMD', 'pg_isready', '-U', 'test']
+      interval: 60s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+      start_interval: 1s
+
+networks:
+  nginx:
+
+volumes:
+  logs:
