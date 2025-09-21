@@ -1,5 +1,5 @@
 use entity::{dummy, prelude::*};
-use sea_orm::{prelude::*, ActiveValue::Set};
+use sea_orm::{ActiveValue::Set, prelude::*};
 
 pub struct DummyTable<'db> {
   db: &'db DatabaseConnection,

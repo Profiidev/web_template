@@ -1,6 +1,6 @@
 use std::net::SocketAddr;
 
-use axum::{serve, Extension, Router};
+use axum::{Extension, Router, serve};
 use clap::Parser;
 #[cfg(debug_assertions)]
 use dotenv::dotenv;

@@ -1,8 +1,8 @@
-use axum::{routing::get, Extension, Router};
+use axum::{Extension, Router, routing::get};
 use derive_util::FromReqExtension;
 
 use crate::{
-  db::{DBTrait, DB},
+  db::{DB, DBTrait},
   error::Result,
   router_extension,
 };
