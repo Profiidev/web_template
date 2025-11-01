@@ -4,8 +4,8 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-sea-orm = "1.1.16"
-serde = { version = "1.0.226", features = ["derive"] }
+sea-orm = "1.1.17"
+serde = { version = "1.0.228", features = ["derive"] }
 
 [lib]
 name = "entity"
