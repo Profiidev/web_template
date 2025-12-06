@@ -28,7 +28,7 @@ impl Default for Config {
       db: DBConfig::default(),
       db_url: "".to_string(),
       metrics: MetricsConfig {
-        metrics_name: "my-app".to_string(),
+        metrics_name: "{{project-name}}".to_string(),
         ..Default::default()
       },
     }

@@ -25,7 +25,7 @@ jobs:
       
     strategy:
       matrix:
-        item: [{ df_path: ./, image: "${{ github.repository}}/my-app" }]
+        item: [{ df_path: ./, image: "${{ github.repository}}/{{project-name}}" }]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -94,4 +94,4 @@ jobs:
           event-type: bump-chart
           repository: profiidev/helm-charts
           token: ${{ secrets.HELM_CHARTS_TOKEN }}
-          client-payload: '{"chart_name": "my-app", "chart_version": "${{ github.ref_name }}" }'
+          client-payload: '{"chart_name": "{{project-name}}", "chart_version": "${{ github.ref_name }}" }'
