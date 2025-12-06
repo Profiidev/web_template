@@ -46,7 +46,6 @@ RUN \
   cargo chef cook --release --target $TARGET
 
 COPY backend/Cargo.toml backend/
-COPY backend/build.rs backend/
 COPY backend/src backend/src
 COPY backend/entity/Cargo.toml backend/entity/
 COPY backend/entity/src backend/entity/src

@@ -592,9 +592,9 @@ dependencies = [
 
 [[package]]
 name = "centaurus"
-version = "0.4.6"
+version = "0.4.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9991db4988fa01d46e8574d0ae3b5c3d19ff2ab8d8b0dc9faff237ebb4ac1d13"
+checksum = "b49f6c3f3fc426fe5be79bfbde8fd438f3d3d21decd70d8c3109858c060abc63"
 dependencies = [
  "async-trait",
  "axum",
@@ -603,6 +603,7 @@ dependencies = [
  "color-eyre",
  "eyre",
  "http",
+ "hyper-util",
  "metrics",
  "metrics-exporter-prometheus",
  "sea-orm",

@@ -2,11 +2,10 @@ use axum::{Extension, Router};
 use centaurus::{
   db::init::init_db,
   init::{
-    axum::{add_base_layers, listener_setup, run_app},
+    axum::{listener_setup, run_app},
     logging::init_logging,
-    metrics::{init_metrics, metrics, metrics_route},
+    router::base_router,
   },
-  req::health,
   router_extension,
 };
 #[cfg(debug_assertions)]
@@ -18,7 +17,6 @@ use crate::config::Config;
 mod config;
 mod db;
 mod dummy;
-mod frontend;
 
 #[tokio::main]
 async fn main() {
@@ -27,49 +25,30 @@ async fn main() {
 
   let config = Config::parse();
   init_logging(&config.base);
-  let handle = init_metrics(config.metrics_name.clone());
-
-  let metrics_name = config.metrics_name.clone();
 
   let listener = listener_setup(config.base.port).await;
 
-  let app = router(&config)
+  let app = base_router(api_router(), &config.base, &config.metrics)
     .await
     .state(config)
-    .await
-    .metrics(metrics_name, handle, vec![])
     .await;
 
   info!("Starting application");
   run_app(listener, app).await;
 }
 
-async fn router(config: &Config) -> Router {
-  frontend::router()
-    .nest("/api", api_router().await)
-    .add_base_layers_filtered(&config.base, |path| path.starts_with("/api"))
-    .await
-}
-
-async fn api_router() -> Router {
-  Router::new()
-    .merge(dummy::router())
-    .merge(health::router())
-    .metrics_route()
-    .await
+fn api_router() -> Router {
+  dummy::router()
 }
 
 router_extension!(
   async fn state(self, config: Config) -> Self {
     use dummy::dummy;
-    use frontend::frontend;
 
     let db = init_db::<migration::Migrator>(&config.db, &config.db_url).await;
 
     self
       .dummy()
-      .await
-      .frontend()
       .await
       .layer(Extension(db))
       .layer(Extension(config))
