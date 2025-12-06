@@ -23,7 +23,7 @@ services:
       - nginx
     tty: true
     ports:
-      - '5175:8000'
+      - '5173:8000'
     entrypoint: ['tini', '--']
     command: ['cargo', 'watch', '-x', 'run']
     depends_on:

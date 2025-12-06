@@ -62,11 +62,14 @@ async fn api_router() -> Router {
 router_extension!(
   async fn state(self, config: Config) -> Self {
     use dummy::dummy;
+    use frontend::frontend;
 
     let db = init_db::<migration::Migrator>(&config.db, &config.db_url).await;
 
     self
       .dummy()
+      .await
+      .frontend()
       .await
       .layer(Extension(db))
       .layer(Extension(config))
