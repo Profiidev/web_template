@@ -4,26 +4,30 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-openssl = { version = "0.10.75", features = ["vendored"] }
-thiserror = "2.0.17"
-uuid = { version = "1.18.1", features = ["v4"] }
+centaurus = { version = "0.4.3", features = [
+  "axum",
+  "logging",
+  "sea-orm",
+  "uuid",
+] }
+uuid = { version = "1.19.0", features = ["v4"] }
 entity = { path = "entity" }
 migration = { path = "migration" }
-derive-util = { path = "derive-util" }
 sea-orm = { version = "1.1.19", features = [
   "sqlx-postgres",
   "runtime-tokio-rustls",
 ] }
 axum = { version = "0.8.7", features = ["macros", "ws", "tracing"] }
 axum-extra = { version = "0.12.2", features = ["cookie", "typed-header"] }
-tracing-subscriber = "0.3.22"
-clap = "4.5.53"
 tracing = "0.1.43"
 tower = "0.5.2"
 tower-http = { version = "0.6.7", features = ["cors", "trace"] }
 tokio = { version = "1.48.0", features = ["signal"] }
 http = "1.4.0"
 dotenv = "0.15.0"
+serde = { version = "1.0.228", features = ["derive"] }
+figment = { version = "0.10.19", features = ["env"] }
+hyper-util = { version = "0.1.19", features = ["client-legacy"] }
 
 [[bin]]
 name = "backend"

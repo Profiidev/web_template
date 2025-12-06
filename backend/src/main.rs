@@ -1,20 +1,24 @@
-use std::net::SocketAddr;
-
-use axum::{Extension, Router, serve};
-use clap::Parser;
+use axum::{Extension, Router};
+use centaurus::{
+  db::init::init_db,
+  init::{
+    axum::{add_base_layers, listener_setup, run_app},
+    logging::init_logging,
+    metrics::{init_metrics, metrics, metrics_route},
+  },
+  req::health,
+  router_extension,
+};
 #[cfg(debug_assertions)]
 use dotenv::dotenv;
-use tokio::{net::TcpListener, signal};
+use tracing::info;
 
-use crate::{config::Config, cors::cors};
+use crate::config::Config;
 
 mod config;
-mod cors;
 mod db;
 mod dummy;
-mod error;
-mod logging;
-mod macros;
+mod frontend;
 
 #[tokio::main]
 async fn main() {
@@ -22,60 +26,49 @@ async fn main() {
   dotenv().ok();
 
   let config = Config::parse();
-  tracing_subscriber::fmt()
-    .with_max_level(config.log_level)
-    .init();
+  init_logging(&config.base);
+  let handle = init_metrics(config.metrics_name.clone());
 
-  let addr = SocketAddr::from(([0, 0, 0, 0], config.port));
-  let listener = TcpListener::bind(addr)
+  let metrics_name = config.metrics_name.clone();
+
+  let listener = listener_setup(config.base.port).await;
+
+  let app = router(&config)
     .await
-    .expect("Failed to bind to address");
-
-  let app = router().state(&config).await.layer(Extension(config));
-
-  serve(listener, app)
-    .with_graceful_shutdown(shutdown_signal())
+    .state(config)
     .await
-    .expect("Server failed");
+    .metrics(metrics_name, handle, vec![])
+    .await;
+
+  info!("Starting application");
+  run_app(listener, app).await;
 }
 
-fn router() -> Router {
-  dummy::router()
+async fn router(config: &Config) -> Router {
+  frontend::router()
+    .nest("/api", api_router().await)
+    .add_base_layers_filtered(&config.base, |path| path.starts_with("/api"))
+    .await
+}
+
+async fn api_router() -> Router {
+  Router::new()
+    .merge(dummy::router())
+    .merge(health::router())
+    .metrics_route()
+    .await
 }
 
 router_extension!(
-  async fn state(self, config: &Config) -> Self {
-    use db::db;
+  async fn state(self, config: Config) -> Self {
     use dummy::dummy;
-    use logging::logging;
+
+    let db = init_db::<migration::Migrator>(&config.db, &config.db_url).await;
 
     self
-      .db(config)
-      .await
-      .layer(cors(config).expect("Failed to create CORS layer"))
-      .logging()
-      .await
       .dummy()
       .await
+      .layer(Extension(db))
+      .layer(Extension(config))
   }
 );
-
-async fn shutdown_signal() {
-  let ctrl_c = async {
-    signal::ctrl_c()
-      .await
-      .expect("failed to install Ctrl+C handler");
-  };
-
-  let terminate = async {
-    signal::unix::signal(signal::unix::SignalKind::terminate())
-      .expect("failed to install signal handler")
-      .recv()
-      .await;
-  };
-
-  tokio::select! {
-      _ = ctrl_c => {},
-      _ = terminate => {},
-  }
-}
