@@ -1,2 +1,2 @@
 [template]
-ignore = ["checks.yml"]
+ignore = ["checks.yml", "release.yml", "auto-merge.yml", "favicon.png"]
