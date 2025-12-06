@@ -3,10 +3,3 @@ target
 node_modules
 backend/Cargo.lock
 postgres/
-
-# Devenv
-.devenv*
-devenv.local.nix
-
-# direnv
-.direnv

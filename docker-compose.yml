@@ -7,9 +7,13 @@ services:
       - ./package-lock.json:/app/package-lock.json
       - ./package.json:/app/package.json
     tty: true
+    ports:
+      - '5174:5176'
     networks:
       - nginx
+    working_dir: /app/frontend
     command: npm run dev -- --host
+    #command: npm i
 
   backend:
     image: ghcr.io/profiidev/images/rust-musl-watch:main
@@ -18,28 +22,16 @@ services:
     networks:
       - nginx
     tty: true
+    ports:
+      - '5175:8000'
     entrypoint: ['tini', '--']
     command: ['cargo', 'watch', '-x', 'run']
     depends_on:
       postgres:
         condition: service_healthy
 
-  nginx:
-    image: nginx:latest
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-    ports:
-      - '1420:1420'
-    networks:
-      - nginx
-    environment:
-      - NGINX_ENTRYPOINT_QUIET_LOGS=1
-    depends_on:
-      - frontend
-      - backend
-
   postgres:
-    image: postgres:latest
+    image: postgres:17
     restart: unless-stopped
     volumes:
       - ./postgres:/var/lib/postgresql/data
