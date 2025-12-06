@@ -1,11 +1,7 @@
-use axum::{Extension, Router, routing::get};
-use derive_util::FromReqExtension;
+use axum::{Extension, Router, extract::FromRequestParts, routing::get};
+use centaurus::{db::init::Connection, error::Result, router_extension};
 
-use crate::{
-  db::{DB, DBTrait},
-  error::Result,
-  router_extension,
-};
+use crate::db::DBTrait;
 
 pub fn router() -> Router {
   Router::new().route("/test", get(test))
@@ -17,19 +13,20 @@ router_extension!(
   }
 );
 
-async fn test(test: TestState, db: DB) -> Result<String> {
-  let test_model = match db.tables().dummy().load().await {
+async fn test(test: TestState, db: Connection) -> Result<String> {
+  let test_model = match db.dummy().load().await {
     Ok(t) => t,
     Err(_) => {
-      db.tables().dummy().save().await?;
-      db.tables().dummy().load().await?
+      db.dummy().save().await?;
+      db.dummy().load().await?
     }
   };
 
   Ok(format!("{} - {}", test_model.test, test.test))
 }
 
-#[derive(Clone, FromReqExtension)]
+#[derive(Clone, FromRequestParts)]
+#[from_request(via(Extension))]
 struct TestState {
   test: String,
 }

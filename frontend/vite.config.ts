@@ -6,14 +6,8 @@ import { enhancedImages } from '@sveltejs/enhanced-img';
 export default defineConfig({
   plugins: [enhancedImages(), tailwindcss(), sveltekit()],
   server: {
-    port: 1420,
-    strictPort: true,
     hmr: {
-      protocol: 'ws',
-      port: 1420
+      port: 5174
     }
-  },
-  preview: {
-    port: 1420
   }
 });

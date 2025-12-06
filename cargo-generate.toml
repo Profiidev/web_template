@@ -1,2 +1,3 @@
 [template]
 ignore = ["checks.yml"]
+exclude = ["favicon.png", "auto-merge.yml", "release.yml"]

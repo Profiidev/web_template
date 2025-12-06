@@ -1,21 +1,53 @@
-use clap::Parser;
-use derive_util::FromReqExtension;
-use tracing::Level;
+use centaurus::{
+  config::{BaseConfig, MetricsConfig},
+  db::config::DBConfig,
+};
+use figment::{
+  Figment,
+  providers::{Env, Serialized},
+};
+use serde::{Deserialize, Serialize};
+use tracing::instrument;
 
-#[derive(Parser, Clone, FromReqExtension)]
+#[derive(Deserialize, Serialize, Clone)]
 pub struct Config {
-  #[clap(long, env, default_value = "8000")]
-  pub port: u16,
+  #[serde(flatten)]
+  pub base: BaseConfig,
+  #[serde(flatten)]
+  pub db: DBConfig,
+  #[serde(flatten)]
+  pub metrics: MetricsConfig,
 
-  #[clap(long, env, default_value = "info")]
-  pub log_level: Level,
-
-  #[clap(long, env, default_value = "")]
-  pub allowed_origins: String,
-
-  #[clap(long, env, default_value = "false")]
-  pub db_logging: bool,
-
-  #[clap(long, env)]
   pub db_url: String,
+}
+
+impl Default for Config {
+  fn default() -> Self {
+    Self {
+      base: BaseConfig::default(),
+      db: DBConfig::default(),
+      db_url: "".to_string(),
+      metrics: MetricsConfig {
+        metrics_name: "{{project-name}}".to_string(),
+        ..Default::default()
+      },
+    }
+  }
+}
+
+impl Config {
+  #[instrument]
+  pub fn parse() -> Self {
+    let config = Figment::new()
+      .merge(Serialized::defaults(Self::default()))
+      .merge(Env::raw().global());
+
+    let config: Self = config.extract().expect("Failed to parse configuration");
+
+    if config.db_url.is_empty() {
+      panic!("Database URL is not set");
+    }
+
+    config
+  }
 }
