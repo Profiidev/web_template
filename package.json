@@ -4,7 +4,7 @@
   ],
   "devDependencies": {
     "prettier": "^3.8.1",
-    "prettier-plugin-svelte": "^3.4.1",
+    "prettier-plugin-svelte": "^3.5.0",
     "prettier-plugin-tailwindcss": "^0.7.1"
   }
 }
