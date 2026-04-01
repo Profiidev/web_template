@@ -4,16 +4,16 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-centaurus = { version = "0.4.11", features = [
+centaurus = { version = "0.4.13", features = [
   "axum",
   "logging",
   "sea-orm",
   "uuid",
 ] }
-uuid = { version = "1.21.0", features = ["v4"] }
+uuid = { version = "1.23.0", features = ["v4"] }
 entity = { path = "entity" }
 migration = { path = "migration" }
-sea-orm = { version = "1.1.19", features = [
+sea-orm = { version = "1.1.20", features = [
   "sqlx-postgres",
   "runtime-tokio-rustls",
 ] }
@@ -22,7 +22,7 @@ axum-extra = { version = "0.12.5", features = ["cookie", "typed-header"] }
 tracing = "0.1.44"
 tower = "0.5.3"
 tower-http = { version = "0.6.8", features = ["cors", "trace"] }
-tokio = { version = "1.49.0", features = ["signal"] }
+tokio = { version = "1.50.0", features = ["signal"] }
 http = "1.4.0"
 dotenv = "0.15.0"
 serde = { version = "1.0.228", features = ["derive"] }
