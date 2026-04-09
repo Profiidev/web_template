@@ -1,3 +1,14 @@
 [template]
 ignore = ["checks.yml"]
-exclude = ["favicon.png", "auto-merge.yml", "release.yml"]
+exclude = [
+  "favicon.png",
+  "auto-merge.yml",
+  "release.yml",
+  "auto-merge-release.yml",
+  "create-release.yml",
+  "frontend/src/routes/account/general/+page.svelte",
+  "frontend/src/routes/groups/+page.svelte",
+  "frontend/src/routes/password/reset/+page.svelte",
+  "frontend/src/routes/users/+page.svelte",
+  "frontend/src/routes/users/create/+page.svelte"
+]
