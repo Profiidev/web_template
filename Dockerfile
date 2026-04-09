@@ -1,6 +1,12 @@
-ARG TARGET=x86_64-unknown-linux-gnu
+ARG TARGETARCH
+# If TARGETARCH is amd64, result is x86_64. If arm64, result is aarch64.
+ARG RUST_ARCH=${TARGETARCH/amd64/x86_64}
+ARG RUST_ARCH=${RUST_ARCH/arm64/aarch64}
+ARG TARGET=${RUST_ARCH}-unknown-linux-gnu
 ARG RUSTFLAGS="-C target-feature=+crt-static"
 ARG FRONTEND_DIR=/app/frontend
+ARG FRONTEND_URL="http://localhost:3000/"
+ARG BACKEND_URL="http://localhost:8000"
 
 FROM node:24-alpine AS frontend-builder
 
@@ -10,6 +16,9 @@ COPY frontend/package.json ./
 COPY package-lock.json package.json ../
 
 RUN npm ci
+
+ARG FRONTEND_URL
+ARG BACKEND_URL
 
 COPY frontend/svelte.config.js frontend/tsconfig.json frontend/vite.config.ts ./
 COPY frontend/src ./src
@@ -37,6 +46,7 @@ FROM ghcr.io/profiidev/images/rust-gnu-builder:main AS backend-builder
 ARG TARGET
 ARG RUSTFLAGS
 ARG FRONTEND_DIR
+ARG FRONTEND_URL
 
 COPY --from=backend-planner /app/recipe.json .
 
@@ -61,7 +71,8 @@ RUN \
 
 FROM node:24-alpine
 
-ARG FRONTEND_DIR
+ENV DB_URL="sqlite:/data/{{project-name}}.db?mode=rwc"
+ENV SITE_URL="http://localhost:8000"
 
 COPY --from=backend-builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 

@@ -1,6 +1,7 @@
 services:
   frontend:
     image: ghcr.io/profiidev/images/node-alpine-dev:main
+    user: '${HOST_UID:-0}:${HOST_GID:-0}'
     volumes:
       - ./frontend:/app/frontend
       - ./node_modules:/app/node_modules
@@ -17,6 +18,7 @@ services:
 
   backend:
     image: ghcr.io/profiidev/images/rust-musl-watch:main
+    user: '${HOST_UID:-0}:${HOST_GID:-0}'
     volumes:
       - ./backend:/app
     networks:
@@ -31,10 +33,10 @@ services:
         condition: service_healthy
 
   postgres:
-    image: postgres:17
+    image: postgres:18
     restart: unless-stopped
     volumes:
-      - ./postgres:/var/lib/postgresql/data
+      - ./postgres:/var/lib/postgresql
     environment:
       - POSTGRES_PASSWORD=test
       - POSTGRES_USER=test
@@ -53,6 +55,3 @@ services:
 
 networks:
   nginx:
-
-volumes:
-  logs:

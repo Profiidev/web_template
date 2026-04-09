@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { dummy } from '../lib/backend/dummy.svelte';
+  import { test } from '$lib/client';
 
-  let text = dummy();
+  let text = test();
 </script>
 
 {#await text}
   <p>Loading ...</p>
 {:then text}
-  <p>{text}</p>
+  <p>{text.data}</p>
 {/await}

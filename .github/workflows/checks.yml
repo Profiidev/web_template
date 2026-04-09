@@ -27,6 +27,7 @@ jobs:
 
       - name: Generate svelte data
         run: |
+          echo "BACKEND_URL=http://localhost:8000" > frontend/.env
           cd frontend && npm run sync
 
       - name: Run linters

@@ -1,15 +1,17 @@
-use axum::{Extension, Router};
+use aide::axum::ApiRouter;
+use axum::Extension;
 use centaurus::{
-  db::init::init_db,
-  init::{
-    axum::{listener_setup, run_app},
-    logging::init_logging,
-    router::base_router,
+  backend::{
+    init::{listener_setup, run_app_connect_info},
+    middleware::rate_limiter::RateLimiter,
+    router::build_router,
   },
-  router_extension,
+  db::init::init_db,
+  logging::init_logging,
+  version_header,
 };
 #[cfg(debug_assertions)]
-use dotenv::dotenv;
+use dotenvy::dotenv;
 use tracing::info;
 
 use crate::config::Config;
@@ -27,30 +29,21 @@ async fn main() {
   init_logging(config.base.log_level);
 
   let listener = listener_setup(config.base.port).await;
-
-  let app = base_router(api_router(), &config.base, &config.metrics)
-    .await
-    .state(config)
-    .await;
+  let mut app = build_router(api_router, state, config).await;
+  version_header!(app);
 
   info!("Starting application");
-  run_app(listener, app).await;
+  run_app_connect_info(listener, app).await;
 }
 
-fn api_router() -> Router {
-  dummy::router()
+fn api_router(_rate_limiter: &mut RateLimiter) -> ApiRouter {
+  ApiRouter::new().nest("/dummy", dummy::router())
 }
 
-router_extension!(
-  async fn state(self, config: Config) -> Self {
-    use dummy::dummy;
+async fn state(router: ApiRouter, config: Config) -> ApiRouter {
+  let db = init_db::<migration::Migrator>(&config.db, &config.db_url).await;
 
-    let db = init_db::<migration::Migrator>(&config.db, &config.db_url).await;
+  let router = dummy::state(router);
 
-    self
-      .dummy()
-      .await
-      .layer(Extension(db))
-      .layer(Extension(config))
-  }
-);
+  router.layer(Extension(db))
+}
