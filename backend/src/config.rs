@@ -1,5 +1,6 @@
 use centaurus::{
-  config::{BaseConfig, MetricsConfig},
+  Config,
+  backend::config::{BaseConfig, MetricsConfig, SiteConfig},
   db::config::DBConfig,
 };
 use figment::{
@@ -9,14 +10,19 @@ use figment::{
 use serde::{Deserialize, Serialize};
 use tracing::instrument;
 
-#[derive(Deserialize, Serialize, Clone)]
+#[derive(Deserialize, Serialize, Clone, Config)]
 pub struct Config {
+  #[base]
   #[serde(flatten)]
   pub base: BaseConfig,
   #[serde(flatten)]
   pub db: DBConfig,
+  #[metrics]
   #[serde(flatten)]
   pub metrics: MetricsConfig,
+  #[site]
+  #[serde(flatten)]
+  pub site: SiteConfig,
 
   pub db_url: String,
 }
@@ -26,6 +32,7 @@ impl Default for Config {
     Self {
       base: BaseConfig::default(),
       db: DBConfig::default(),
+      site: SiteConfig::default(),
       db_url: "".to_string(),
       metrics: MetricsConfig {
         metrics_name: "{{project-name}}".to_string(),
@@ -42,10 +49,14 @@ impl Config {
       .merge(Serialized::defaults(Self::default()))
       .merge(Env::raw().global());
 
-    let config: Self = config.extract().expect("Failed to parse configuration");
+    let mut config: Self = config.extract().expect("Failed to parse configuration");
 
     if config.db_url.is_empty() {
       panic!("Database URL is not set");
+    }
+
+    if config.db_url.starts_with("sqlite") {
+      config.db.validate_sqlite();
     }
 
     config

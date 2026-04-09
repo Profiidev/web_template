@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-centaurus = { version = "0.4.13", features = [
+centaurus = { version = "0.9.1", features = [
   "axum",
   "logging",
   "sea-orm",
@@ -22,12 +22,24 @@ axum-extra = { version = "0.12.5", features = ["cookie", "typed-header"] }
 tracing = "0.1.44"
 tower = "0.5.3"
 tower-http = { version = "0.6.8", features = ["cors", "trace"] }
-tokio = { version = "1.50.0", features = ["signal"] }
+tokio = { version = "1.51.1", features = ["signal"] }
 http = "1.4.0"
-dotenv = "0.15.0"
+dotenvy = "0.15.7"
 serde = { version = "1.0.228", features = ["derive"] }
 figment = { version = "0.10.19", features = ["env"] }
 hyper-util = { version = "0.1.20", features = ["client-legacy"] }
+aide = { version = "0.16.0-alpha.3", features = [
+  "axum",
+  "axum-json",
+  "axum-tokio",
+  "axum-query",
+  "axum-ws",
+  "axum-extra",
+  "axum-extra-cookie",
+  "axum-extra-headers",
+  "macros",
+] }
+schemars = { version = "1.2.1", features = ["uuid1", "chrono04", "url2"] }
 
 [[bin]]
 name = "backend"

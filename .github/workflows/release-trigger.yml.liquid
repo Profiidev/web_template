@@ -1,0 +1,46 @@
+name: Release Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version'
+        required: true
+        default: 'v0.0.0'
+
+jobs:
+  update-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        with:
+          token: ${{ secrets.PERSONAL_TOKEN }}
+        uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: bahmutov/npm-install@v1
+
+      - name: Update version
+        id: update_version
+        run: |
+          RAW_TAG=${{ github.event.inputs.version }}
+          NEW_VERSION="${RAW_TAG#v}"
+          echo "Bumping version to $NEW_VERSION"
+          sed -i "s/^version = \".*\"/version = \"$NEW_VERSION\"/" backend/Cargo.toml
+          sed -i "s/^version = \".*\"/version = \"$NEW_VERSION\"/" cli/Cargo.toml
+          sed -i "s/version = \".*\"/version = \"$NEW_VERSION\"/" flake.nix
+          cargo metadata -q > /dev/null
+          cd frontend && npm version $NEW_VERSION --no-git-tag-version
+          cd ../action && npm version $NEW_VERSION --no-git-tag-version && npm run build
+          cd .. && npx -y prettier -cw .
+
+      - name: Create PR
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ secrets.PERSONAL_TOKEN }}
+          commit-message: 'Updated version to ${{ github.event.inputs.version }}'
+          branch: chore/release-version-${{ github.event.inputs.version }}
+          title: 'Release version ${{ github.event.inputs.version }}'
+          body: 'This PR releases the version ${{ github.event.inputs.version }}.'
+          base: main
+          sign-commits: true
+          labels: release-version
