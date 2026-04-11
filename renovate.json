@@ -16,12 +16,15 @@
   "automergeStrategy": "merge-commit",
   "vulnerabilityAlerts": {
     "enabled": true,
-    "vulnerabilityFixStrategy": "highest"
+    "vulnerabilityFixStrategy": "highest",
+    "schedule": ["at any time"],
+    "automerge": true,
+    "minimumReleaseAge": null,
+    "rangeStrategy": "replace"
   },
   "osvVulnerabilityAlerts": true,
   "dependencyDashboardOSVVulnerabilitySummary": "unresolved",
   "lockFileMaintenance": {
     "enabled": true
-  },
-  "ignoreDeps": ["tracing-subscriber"]
+  }
 }
