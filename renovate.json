@@ -5,12 +5,6 @@
     "schedule:automergeMonthly",
     "schedule:monthly"
   ],
-  "packageRules": [
-    {
-      "groupName": "{{manager}}",
-      "matchPackageNames": ["*"]
-    }
-  ],
   "semanticCommitType": "chore",
   "automerge": true,
   "automergeStrategy": "merge-commit",
@@ -19,8 +13,7 @@
     "vulnerabilityFixStrategy": "highest",
     "schedule": ["at any time"],
     "automerge": true,
-    "minimumReleaseAge": null,
-    "rangeStrategy": "bump"
+    "minimumReleaseAge": null
   },
   "osvVulnerabilityAlerts": true,
   "dependencyDashboardOSVVulnerabilitySummary": "unresolved",
