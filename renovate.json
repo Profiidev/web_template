@@ -15,6 +15,5 @@
     "automerge": true,
     "minimumReleaseAge": null
   },
-  "osvVulnerabilityAlerts": true,
   "dependencyDashboardOSVVulnerabilitySummary": "unresolved"
 }
