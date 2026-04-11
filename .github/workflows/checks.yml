@@ -10,16 +10,16 @@ jobs:
       checks: write
       contents: write
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           token: ${{ secrets.PERSONAL_TOKEN }}
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # stable
         with:
           components: clippy,rustfmt
 
       - name: Cache cargo and rust files
         id: rust_cache
-        uses: Swatinem/rust-cache@v2
+        uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
         with:
           cache-on-failure: true
           shared-key: "linter_cache"
@@ -31,7 +31,7 @@ jobs:
           cd frontend && npm run sync
 
       - name: Run linters
-        uses: profiidev/rust-lint-action@v3
+        uses: profiidev/rust-lint-action@390b383d1bf3a6e944a183bd62ca85cc1312dec4 # v3
         with:
           rustfmt: true
           clippy: true
