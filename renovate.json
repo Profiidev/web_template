@@ -1,41 +1,15 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended",
-    "schedule:automergeMonthly",
-    "schedule:monthly"
-  ],
+  "extends": ["config:base"],
   "packageRules": [
     {
-      "groupName": "all",
-      "matchPackageNames": ["*"],
-      "vulnerabilityAlerts": {
-        "enabled": true,
-        "vulnerabilityFixStrategy": "highest",
-        "schedule": ["at any time"],
-        "automerge": true,
-        "minimumReleaseAge": null
-      }
+      "enabled": false,
+      "groupName": "everything",
+      "matchManagers": ["npm"],
+      "matchPackagePatterns": ["*"],
+      "separateMajorMinor": false
     }
   ],
-  "semanticCommitType": "chore",
-  "automerge": true,
-  "automergeStrategy": "merge-commit",
-  "osvVulnerabilityAlerts": true,
-  "dependencyDashboardOSVVulnerabilitySummary": "unresolved",
-  "lockFileMaintenance": {
-    "enabled": true
-  },
   "vulnerabilityAlerts": {
-    "enabled": true,
-    "groupName": "all",
-    "schedule": ["at any time"],
-    "dependencyDashboardApproval": true,
-    "minimumReleaseAge": null,
-    "rangeStrategy": "update-lockfile",
-    "commitMessageSuffix": "[SECURITY]",
-    "branchTopic": "{{{datasource}}}-{{{depNameSanitized}}}-vulnerability",
-    "prCreation": "immediate",
-    "vulnerabilityFixStrategy": "lowest"
+    "enabled": true
   }
 }
