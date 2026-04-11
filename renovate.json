@@ -1,5 +1,11 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:best-practices"],
-  "packageRules": []
+  "extends": ["config:best-practices", "group:allNonMajor", ":automergeMinor"],
+  "packageRules": [
+    {
+      "abandonmentThreshold": "5 years",
+      "matchPackageNames": ["dotenvy", "figment"],
+      "matchDatasources": ["crate"]
+    }
+  ]
 }
