@@ -1,12 +1,12 @@
 {
-  "extends": ["config:base"],
+  "extends": ["mergeConfidence:all-badges", "config:recommended"],
   "packageRules": [
     {
       "enabled": false,
       "groupName": "everything",
       "matchManagers": ["npm"],
-      "matchPackagePatterns": ["*"],
-      "separateMajorMinor": false
+      "separateMajorMinor": false,
+      "matchPackageNames": ["*"]
     }
   ],
   "vulnerabilityAlerts": {
