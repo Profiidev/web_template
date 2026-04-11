@@ -1,10 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended",
-    "schedule:automergeMonthly",
-    "schedule:monthly"
-  ],
+  "extends": ["config:recommended"],
   "semanticCommitType": "chore",
   "automerge": true,
   "automergeStrategy": "merge-commit",
