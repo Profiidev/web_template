@@ -1,15 +1,5 @@
 {
-  "extends": ["mergeConfidence:all-badges", "config:recommended"],
-  "packageRules": [
-    {
-      "enabled": false,
-      "groupName": "everything",
-      "matchManagers": ["npm"],
-      "separateMajorMinor": false,
-      "matchPackageNames": ["*"]
-    }
-  ],
-  "vulnerabilityAlerts": {
-    "enabled": true
-  }
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:best-practices"],
+  "packageRules": []
 }
