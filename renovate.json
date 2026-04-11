@@ -7,5 +7,12 @@
       "matchPackageNames": ["dotenvy", "figment"],
       "matchDatasources": ["crate"]
     }
-  ]
+  ],
+  "osvVulnerabilityAlerts": true,
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "vulnerabilityFixStrategy": "highest",
+    "schedule": ["at any time"],
+    "automerge": true
+  }
 }
