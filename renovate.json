@@ -1,15 +1,29 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"],
+  "extends": [
+    "config:recommended",
+    "schedule:automergeMonthly",
+    "schedule:monthly"
+  ],
+  "packageRules": [
+    {
+      "groupName": "{{manager}}",
+      "matchPackageNames": ["*"],
+      "vulnerabilityAlerts": {
+        "enabled": true,
+        "vulnerabilityFixStrategy": "highest",
+        "schedule": ["at any time"],
+        "automerge": true,
+        "minimumReleaseAge": null
+      }
+    }
+  ],
   "semanticCommitType": "chore",
   "automerge": true,
   "automergeStrategy": "merge-commit",
-  "vulnerabilityAlerts": {
-    "enabled": true,
-    "vulnerabilityFixStrategy": "highest",
-    "schedule": ["at any time"],
-    "automerge": true,
-    "minimumReleaseAge": null
-  },
-  "dependencyDashboardOSVVulnerabilitySummary": "unresolved"
+  "osvVulnerabilityAlerts": true,
+  "dependencyDashboardOSVVulnerabilitySummary": "unresolved",
+  "lockFileMaintenance": {
+    "enabled": true
+  }
 }
