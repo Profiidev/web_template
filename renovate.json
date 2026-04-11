@@ -16,8 +16,5 @@
     "minimumReleaseAge": null
   },
   "osvVulnerabilityAlerts": true,
-  "dependencyDashboardOSVVulnerabilitySummary": "unresolved",
-  "lockFileMaintenance": {
-    "enabled": true
-  }
+  "dependencyDashboardOSVVulnerabilitySummary": "unresolved"
 }
