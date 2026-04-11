@@ -7,7 +7,6 @@
   ],
   "packageRules": [
     {
-      "groupName": "{{manager}}",
       "matchPackageNames": ["*"],
       "vulnerabilityAlerts": {
         "enabled": true,
