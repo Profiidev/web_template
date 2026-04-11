@@ -20,7 +20,7 @@
     "schedule": ["at any time"],
     "automerge": true,
     "minimumReleaseAge": null,
-    "rangeStrategy": "replace"
+    "rangeStrategy": "bump"
   },
   "osvVulnerabilityAlerts": true,
   "dependencyDashboardOSVVulnerabilitySummary": "unresolved",
