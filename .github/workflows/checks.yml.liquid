@@ -11,8 +11,11 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v6
+      - uses: actions/create-github-app-token@1b10c78c7865c340bc4f6099eb2f838309f1e8c3 # v3
+        id: app-token
         with:
-          token: ${{ secrets.PERSONAL_TOKEN }}
+          client-id: ${{ secrets.COMMIT_BOT_CLIENT_ID }}
+          private-key: ${{ secrets.COMMIT_BOT_PRIVATE_KEY }}
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: clippy,rustfmt
@@ -42,3 +45,5 @@ jobs:
           svelte_args: "--ignore target"
           tsc: true
           tsc_dir: frontend
+          git_sign_commits: true
+          github_token: ${{ steps.app-token.outputs.token }}
