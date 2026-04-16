@@ -74,6 +74,8 @@ FROM node:24-alpine@sha256:01743339035a5c3c11a373cd7c83aeab6ed1457b55da6a69e014a
 ENV DB_URL="sqlite:/data/{{project-name}}.db?mode=rwc"
 ENV SITE_URL="http://localhost:8000"
 
+RUN mkdir -p /data
+
 COPY --from=backend-builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 WORKDIR /app
