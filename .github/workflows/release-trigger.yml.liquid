@@ -12,9 +12,14 @@ jobs:
   update-version:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/create-github-app-token@1b10c78c7865c340bc4f6099eb2f838309f1e8c3 # v3
+        id: app-token
+        with:
+          client-id: ${{ secrets.COMMIT_BOT_CLIENT_ID }}
+          private-key: ${{ secrets.COMMIT_BOT_PRIVATE_KEY }}
       - name: Checkout code
         with:
-          token: ${{ secrets.PERSONAL_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
         uses: actions/checkout@v6
       - uses: dtolnay/rust-toolchain@stable
       - uses: bahmutov/npm-install@v1
@@ -33,7 +38,7 @@ jobs:
       - name: Create PR
         uses: peter-evans/create-pull-request@v8
         with:
-          token: ${{ secrets.PERSONAL_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
           commit-message: 'Updated version to ${{ github.event.inputs.version }}'
           branch: chore/release-version-${{ github.event.inputs.version }}
           title: 'Release version ${{ github.event.inputs.version }}'
