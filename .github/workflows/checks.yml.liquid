@@ -34,7 +34,7 @@ jobs:
           cd frontend && npm run sync
 
       - name: Run linters
-        uses: profiidev/rust-lint-action@v3
+        uses: profiidev/rust-lint-action@254cb29d96e3952b4e4a983538024e6e2c38c08c # v4
         with:
           rustfmt: true
           clippy: true
