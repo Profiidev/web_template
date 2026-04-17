@@ -2,27 +2,27 @@ import { defineConfig } from '@hey-api/openapi-ts';
 
 export default defineConfig({
   input: 'http://localhost:5173/openapi.json',
+  logs: './build',
   output: {
     path: 'src/lib/client',
     postProcess: ['prettier']
   },
   plugins: [
     {
-      name: '@hey-api/typescript',
-      enums: true
+      enums: true,
+      name: '@hey-api/typescript'
     },
     {
       name: '@hey-api/sdk'
     },
     {
-      name: '@hey-api/transformers',
-      bigInt: false
+      bigInt: false,
+      name: '@hey-api/transformers'
     },
     {
+      baseUrl: '',
       name: '@hey-api/client-fetch',
-      runtimeConfigPath: '$lib/backend/config',
-      baseUrl: ''
+      runtimeConfigPath: '$lib/backend/config'
     }
-  ],
-  logs: './build'
+  ]
 });

@@ -4,29 +4,33 @@ import { BACKEND_URL } from '$env/static/private';
 const backendUrl = new URL(BACKEND_URL);
 
 export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
-  let url = new URL(request.url);
+  const url = new URL(request.url);
+  let rewriteRequest = request;
+
   if (url.pathname.startsWith('/api/')) {
     url.hostname = backendUrl.hostname;
     url.port = backendUrl.port;
     url.protocol = backendUrl.protocol;
 
-    request = new Request(url.toString(), request);
+    rewriteRequest = new Request(url.toString(), rewriteRequest);
 
-    let cookie = event.request.headers.get('cookie');
-    if (cookie) request.headers.set('cookie', cookie);
+    const cookie = event.request.headers.get('cookie');
+    if (cookie) {
+      rewriteRequest.headers.set('cookie', cookie);
+    }
   }
-  return fetch(request).then((res) => {
-    let headers = new Headers(res.headers);
+  return fetch(rewriteRequest).then((res) => {
+    const headers = new Headers(res.headers);
     headers.append('Access-Control-Allow-Origin', '*');
     return new Response(res.body, {
+      // oxlint-disable-next-line no-misused-spread
       ...res,
       headers
     });
   });
 };
 
-export const handle: Handle = async ({ event, resolve }) => {
-  return resolve(event, {
+export const handle: Handle = async ({ event, resolve }) =>
+  resolve(event, {
     filterSerializedResponseHeaders: () => true
   });
-};
