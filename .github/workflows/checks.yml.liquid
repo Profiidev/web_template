@@ -34,7 +34,7 @@ jobs:
           cd frontend && npm run sync
 
       - name: Run linters
-        uses: profiidev/rust-lint-action@254cb29d96e3952b4e4a983538024e6e2c38c08c # v4
+        uses: profiidev/rust-lint-action@ec3bf81f84ae2a9834fce8967d0eabe852227ff9 # v4
         with:
           rustfmt: true
           clippy: true
@@ -45,5 +45,6 @@ jobs:
           svelte_args: "--ignore target"
           tsc: true
           tsc_dir: frontend
+          oxlint: true
           git_sign_commits: true
           github_token: ${{ steps.app-token.outputs.token }}
