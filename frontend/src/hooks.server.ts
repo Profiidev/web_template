@@ -23,9 +23,9 @@ export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
     const headers = new Headers(res.headers);
     headers.append('Access-Control-Allow-Origin', '*');
     return new Response(res.body, {
-      // oxlint-disable-next-line no-misused-spread
-      ...res,
-      headers
+      headers,
+      status: res.status,
+      statusText: res.statusText
     });
   });
 };
