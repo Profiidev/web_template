@@ -6,7 +6,6 @@ Set Github actions secrets:
 
 - COMMIT_BOT_CLIENT_ID
 - COMMIT_BOT_PRIVATE_KEY
-- HELM_CHARTS_TOKEN
 
 Create .env files from env templates
 
