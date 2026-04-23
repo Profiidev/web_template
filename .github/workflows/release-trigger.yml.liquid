@@ -22,7 +22,9 @@ jobs:
           token: ${{ steps.app-token.outputs.token }}
         uses: actions/checkout@v6
       - uses: dtolnay/rust-toolchain@stable
-      - uses: bahmutov/npm-install@v1
+
+      - name: Install dependencies
+        run: npm ci
 
       - name: Update version
         id: update_version
