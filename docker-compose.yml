@@ -1,6 +1,6 @@
 services:
   frontend:
-    image: ghcr.io/profiidev/images/node-alpine-dev:main@sha256:332d71d1591d8afed127e40c41d5b35a18a8a5401cc1398532d24101d547c354
+    image: ghcr.io/profiidev/images/node-alpine-dev:main@sha256:a9021d8b424f81e5c3d4a5eef98041b011fd2054c303e7e687acc60167f18f2a
     user: '${HOST_UID:-0}:${HOST_GID:-0}'
     volumes:
       - ./frontend:/app/frontend
