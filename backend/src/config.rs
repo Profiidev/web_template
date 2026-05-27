@@ -1,6 +1,9 @@
 use centaurus::{
   Config,
-  backend::config::{BaseConfig, MetricsConfig, SiteConfig},
+  backend::{
+    auth::settings::AuthConfig,
+    config::{BaseConfig, MetricsConfig, SiteConfig},
+  },
   db::config::DBConfig,
 };
 use figment::{
@@ -23,6 +26,9 @@ pub struct Config {
   #[site]
   #[serde(flatten)]
   pub site: SiteConfig,
+  #[auth]
+  #[serde(flatten)]
+  pub auth: AuthConfig,
 
   pub db_url: String,
 }
@@ -33,6 +39,7 @@ impl Default for Config {
       base: BaseConfig::default(),
       db: DBConfig::default(),
       site: SiteConfig::default(),
+      auth: AuthConfig::default(),
       db_url: "".to_string(),
       metrics: MetricsConfig {
         metrics_name: "{{project-name}}".to_string(),

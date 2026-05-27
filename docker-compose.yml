@@ -1,6 +1,7 @@
 services:
   frontend:
-    image: ghcr.io/profiidev/images/node-alpine-dev:main@sha256:a9021d8b424f81e5c3d4a5eef98041b011fd2054c303e7e687acc60167f18f2a
+    image: ghcr.io/profiidev/images/node-gnu-dev:main@sha256:98071687039dfc38aea9dd691f6c555b58f4758b782234eea4cd989c2d47903d
+    restart: unless-stopped
     user: '${HOST_UID:-0}:${HOST_GID:-0}'
     volumes:
       - ./frontend:/app/frontend
@@ -33,7 +34,7 @@ services:
         condition: service_healthy
 
   postgres:
-    image: postgres:18@sha256:52e6ffd11fddd081ae63880b635b2a61c14008c17fc98cdc7ce5472265516dd0
+    image: postgres:18@sha256:8ff36f3c66371cba71d20ceedccfc3de9669a68737607888c4ef0af93abe8e39
     restart: unless-stopped
     volumes:
       - ./postgres:/var/lib/postgresql

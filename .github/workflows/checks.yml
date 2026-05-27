@@ -10,12 +10,12 @@ jobs:
       checks: write
       contents: write
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-      - uses: actions/create-github-app-token@1b10c78c7865c340bc4f6099eb2f838309f1e8c3 # v3
+      - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
         id: app-token
         with:
           client-id: ${{ secrets.COMMIT_BOT_CLIENT_ID }}
           private-key: ${{ secrets.COMMIT_BOT_PRIVATE_KEY }}
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # stable
         with:
           components: clippy,rustfmt
@@ -26,9 +26,7 @@ jobs:
         with:
           cache-on-failure: true
           shared-key: "linter_cache"
-
-      - name: Install dependencies
-        run: npm ci
+      - uses: bahmutov/npm-install@v1
 
       - name: Generate svelte data
         run: |
@@ -41,12 +39,11 @@ jobs:
           rustfmt: true
           clippy: true
           auto_fix: true
-          prettier: true
-          prettier_extensions: "css,html,js,json,jsx,md,sass,scss,ts,tsx,vue,yaml,yml,svelte"
           svelte: true
           svelte_args: "--ignore target"
           tsc: true
           tsc_dir: frontend
           oxlint: true
+          oxfmt: true
           git_sign_commits: true
           github_token: ${{ steps.app-token.outputs.token }}
