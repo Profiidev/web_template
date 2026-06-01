@@ -18,7 +18,7 @@ services:
     #command: npm i
 
   backend:
-    image: ghcr.io/profiidev/images/rust-musl-watch:main@sha256:0d38b2e2239495eb551af4208acf213e40e551489ec8ca9386d16db987f21a61
+    image: ghcr.io/profiidev/images/rust-musl-watch:main@sha256:ec17dc66106621eea023280e31de6e192bbdaffc9b5730ec9bbf6cd3aec15c48
     user: '${HOST_UID:-0}:${HOST_GID:-0}'
     volumes:
       - ./backend:/app
