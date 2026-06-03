@@ -16,12 +16,12 @@
   },
   "dependencies": {
     "@lucide/svelte": "^1.16.0",
-    "@profidev/pleiades": "^1.9.4",
+    "@profidev/pleiades": "^1.9.6",
     "@sveltejs/enhanced-img": "0.10.4",
     "valibot": "^1.4.1"
   },
   "devDependencies": {
-    "@fontsource-variable/inter": "5.2.8",
+    "@fontsource-variable/geist": "5.2.9",
     "@hey-api/openapi-ts": "0.97.3",
     "@sveltejs/adapter-node": "5.5.4",
     "@sveltejs/kit": "2.61.1",
