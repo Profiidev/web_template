@@ -74,7 +74,10 @@ FROM node:26-slim@sha256:1e738cb88890a15c71880323fbc35a739b7bbc703d72e8bfd161312
 ENV DB_URL="sqlite:/data/{{project-name}}.db?mode=rwc"
 ENV SITE_URL="http://localhost:8000"
 
-RUN mkdir -p /data
+RUN mkdir -p /data \
+    && groupadd -r {{project-name}} \
+    && useradd -r -g {{project-name}} {{project-name}} \
+    && chown -R {{project-name}}:{{project-name}} /data
 
 COPY --from=backend-builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
@@ -83,5 +86,7 @@ COPY --from=frontend-builder /app/frontend/build /app/frontend
 COPY --from=frontend-builder /app/frontend/package.json /app/frontend/package.json
 COPY --from=frontend-builder /app/package-lock.json /app/package-lock.json
 COPY --from=backend-builder /app/app /usr/local/bin/{{project-name}}
+
+USER {{project-name}}
 
 ENTRYPOINT ["{{project-name}}"]
