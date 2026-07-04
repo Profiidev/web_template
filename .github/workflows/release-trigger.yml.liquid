@@ -24,8 +24,10 @@ jobs:
 
       - name: Update version
         id: update_version
+        env:
+          INPUT_VERSION: ${{ github.event.inputs.version }}
         run: |
-          RAW_TAG=${{ github.event.inputs.version }}
+          RAW_TAG=$INPUT_VERSION
           NEW_VERSION="${RAW_TAG#v}"
           echo "Bumping version to $NEW_VERSION"
           sed -i "s/^version = \".*\"/version = \"$NEW_VERSION\"/" backend/Cargo.toml
