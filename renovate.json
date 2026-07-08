@@ -1,4 +1,5 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>profiidev/renovate-config"]
+  "extends": ["github>profiidev/renovate-config"],
+  "ignoreDeps": ["typebox", "@playwright/test"]
 }

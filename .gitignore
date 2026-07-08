@@ -5,3 +5,10 @@ backend/Cargo.lock
 postgres/
 /test/
 /result
+
+# Devenv
+.devenv*
+devenv.local.nix
+
+# direnv
+.direnv
