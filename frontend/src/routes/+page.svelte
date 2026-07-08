@@ -2,7 +2,7 @@
   import { testDummy } from '$lib/client';
 
   let text = testDummy({
-    parseAs: 'text',
+    parseAs: 'text'
   });
 </script>
 

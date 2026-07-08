@@ -5,19 +5,19 @@ import type {
   ClientMeta,
   Options as Options2,
   RequestResult,
-  TDataShape,
-} from "./client";
-import { client } from "./client.gen";
+  TDataShape
+} from './client';
+import { client } from './client.gen';
 import type {
   TestDummyData,
   TestDummyErrors,
-  TestDummyResponses,
-} from "./types.gen";
+  TestDummyResponses
+} from './types.gen';
 
 export type Options<
   TData extends TDataShape = TDataShape,
   ThrowOnError extends boolean = boolean,
-  TResponse = unknown,
+  TResponse = unknown
 > = Options2<TData, ThrowOnError, TResponse> & {
   /**
    * You can provide a client instance returned by `createClient()` instead of
@@ -33,10 +33,10 @@ export type Options<
 };
 
 export const testDummy = <ThrowOnError extends boolean = false>(
-  options?: Options<TestDummyData, ThrowOnError>,
+  options?: Options<TestDummyData, ThrowOnError>
 ): RequestResult<TestDummyResponses, TestDummyErrors, ThrowOnError> =>
   (options?.client ?? client).get<
     TestDummyResponses,
     TestDummyErrors,
     ThrowOnError
-  >({ url: "/api/dummy/test", ...options });
+  >({ url: '/api/dummy/test', ...options });

@@ -5,14 +5,14 @@ import {
   type HttpHandler,
   HttpResponse,
   type HttpResponseResolver,
-  type RequestHandlerOptions as RequestHandlerOptions2,
-} from "msw";
+  type RequestHandlerOptions as RequestHandlerOptions2
+} from 'msw';
 
-import type { ClientOptions, TestDummyResponses } from "./types.gen";
+import type { ClientOptions, TestDummyResponses } from './types.gen';
 
 export type RequestHandlerOptions = RequestHandlerOptions2 & {
-  baseUrl?: ClientOptions["baseUrl"];
-  responseFallback?: "error" | "passthrough";
+  baseUrl?: ClientOptions['baseUrl'];
+  responseFallback?: 'error' | 'passthrough';
 };
 
 export type HandleTestDummyResponse = {
@@ -25,27 +25,27 @@ export type HandleTestDummyResponse = {
  */
 export function handleTestDummy(
   response?: HandleTestDummyResponse | HttpResponseResolver<never, never>,
-  options?: RequestHandlerOptions,
+  options?: RequestHandlerOptions
 ): HttpHandler {
   return http.get<never, never>(
-    `${options?.baseUrl ?? "*"}/api/dummy/test`,
+    `${options?.baseUrl ?? '*'}/api/dummy/test`,
     (info) => {
-      if (typeof response === "function") {
+      if (typeof response === 'function') {
         return response(info);
       }
       const body = response?.body;
       if (body !== undefined) {
         return new HttpResponse(body, { status: response?.status ?? 200 });
       }
-      if (options?.responseFallback === "passthrough") {
+      if (options?.responseFallback === 'passthrough') {
         return;
       }
-      return new Response("Not Implemented", {
+      return new Response('Not Implemented', {
         status: 501,
-        statusText: "Not Implemented",
+        statusText: 'Not Implemented'
       });
     },
-    options,
+    options
   );
 }
 
@@ -68,23 +68,23 @@ export type CreateMswHandlersResult = {
 };
 
 export function createMswHandlers(
-  config: RequestHandlerOptions = {},
+  config: RequestHandlerOptions = {}
 ): CreateMswHandlersResult {
   type Handler<R> = (
     response?: R,
-    options?: RequestHandlerOptions,
+    options?: RequestHandlerOptions
   ) => HttpHandler;
   function wrap<R>(handler: Handler<R>): Handler<R> {
     return (response, options) => handler(response, { ...config, ...options });
   }
-  const pick: CreateMswHandlersResult["pick"] = {
-    testDummy: wrap(handleTestDummy),
+  const pick: CreateMswHandlersResult['pick'] = {
+    testDummy: wrap(handleTestDummy)
   };
-  const all: CreateMswHandlersResult["all"] = (options = {}) => {
+  const all: CreateMswHandlersResult['all'] = (options = {}) => {
     type OverrideValue<R> = R | [response?: R, options?: RequestHandlerOptions];
     function invoke<R>(
       fn: Handler<R>,
-      override?: OverrideValue<R>,
+      override?: OverrideValue<R>
     ): HttpHandler {
       return Array.isArray(override) ? fn(...override) : fn(override);
     }
