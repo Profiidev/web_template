@@ -23,6 +23,9 @@ export default defineConfig({
       baseUrl: '',
       name: '@hey-api/client-fetch',
       runtimeConfigPath: '$lib/backend/config'
+    },
+    {
+      name: 'msw'
     }
   ]
 });

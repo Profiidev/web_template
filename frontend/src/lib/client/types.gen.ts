@@ -4,14 +4,14 @@ export type ClientOptions = {
   baseUrl: 'http://localhost:5173' | (string & {});
 };
 
-export type TestData = {
+export type TestDummyData = {
   body?: never;
   path?: never;
   query?: never;
   url: '/api/dummy/test';
 };
 
-export type TestErrors = {
+export type TestDummyErrors = {
   /**
    * An error occurred
    */
@@ -22,7 +22,7 @@ export type TestErrors = {
   '5XX': unknown;
 };
 
-export type TestResponses = {
+export type TestDummyResponses = {
   /**
    * plain text
    */

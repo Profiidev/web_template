@@ -1,7 +1,9 @@
 <script lang="ts">
-  import { test } from '$lib/client';
+  import { testDummy } from '$lib/client';
 
-  let text = test();
+  let text = testDummy({
+    parseAs: 'text'
+  });
 </script>
 
 {#await text}

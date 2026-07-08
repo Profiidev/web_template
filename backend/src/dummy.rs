@@ -8,7 +8,7 @@ use centaurus::{db::init::Connection, error::Result};
 use crate::db::DBTrait;
 
 pub fn router() -> ApiRouter {
-  ApiRouter::new().api_route("/test", get_with(test, |op| op.id("test")))
+  ApiRouter::new().api_route("/test", get_with(test, |op| op.id("testDummy")))
 }
 
 pub fn state(router: ApiRouter) -> ApiRouter {

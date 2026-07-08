@@ -1,5 +1,27 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "extends": ["./node_modules/@profidev/pleiades/.oxlintrc.base.json"],
-  "ignorePatterns": ["*.svelte", "frontend/src/lib/client/**"]
+  "ignorePatterns": ["*.svelte", "frontend/src/lib/client/**"],
+  "overrides": [
+    {
+      "files": ["**/src/tests/**"],
+      "rules": {
+        "typescript/no-unsafe-type-assertion": "off",
+        "unicorn/no-null": "off",
+        "typescript/explicit-member-accessibility": "off",
+        "eslint/class-methods-use-this": "off",
+        "unicorn/consistent-function-scoping": "off"
+      }
+    },
+    {
+      "files": ["app/e2e/**"],
+      "rules": {
+        "eslint/no-console": "off",
+        "eslint/no-underscore-dangle": "off",
+        "eslint/capitalized-comments": "off",
+        "typescript/no-unsafe-type-assertion": "off",
+        "unicorn/number-literal-case": "off"
+      }
+    }
+  ]
 }

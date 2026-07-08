@@ -9,7 +9,7 @@ name = "migration"
 path = "src/lib.rs"
 
 [dependencies]
-centaurus = { version = "0.13.1", default-features = false, features = [
+centaurus = { version = "0.16.3", default-features = false, features = [
   "avatar",
   "db"
 ] }
