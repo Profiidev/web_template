@@ -111,6 +111,24 @@ jobs:
           path: ${{ github.workspace }}/frontend/playwright-report/
           retention-days: 5
 
+  frontend_e2e_gather:
+    needs:
+      - frontend_e2e
+    name: Gather E2E Test Results
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Output build results
+        run: |
+          RESULT="${{ needs.frontend_e2e.result }}"
+          if [[ $RESULT == "success" || $RESULT == "skipped" ]]; then
+            echo "Build succeeded for all packages"
+            exit 0
+          else
+            echo "Build failed for one or more packages"
+            exit 1
+          fi
+
   comment_results:
     name: Comment Results to PR
     runs-on: ubuntu-latest
