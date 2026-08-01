@@ -7,8 +7,8 @@ jobs:
     name: Backend Tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
-      - uses: dtolnay/rust-toolchain@4be7066ada62dd38de10e7b70166bc74ed198c30 # stable
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: dtolnay/rust-toolchain@4cda84d5c5c54efe2404f9d843567869ab1699d4 # stable
         with:
           components: clippy,rustfmt
 
@@ -19,7 +19,7 @@ jobs:
           cache-on-failure: true
           shared-key: "backend_test_cache"
 
-      - uses: taiki-e/install-action@0c80bcf54d007ab0e714c95f3bcc43c387707535 # nextest
+      - uses: taiki-e/install-action@314b6e93a9b2f40a64f401a23fed55603083dc69 # nextest
       - name: "Backend Test"
         run: cd backend && cargo nextest run --all-features --nff
 
@@ -35,7 +35,7 @@ jobs:
     name: Frontend Unit Tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - uses: bahmutov/npm-install@v1
       - name: Generate svelte data
         run: |
@@ -59,7 +59,7 @@ jobs:
     outputs:
       files: ${{ steps.find_files.outputs.FILES }}
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - name: Find E2E Test Files
         id: find_files
         run: |
@@ -75,7 +75,7 @@ jobs:
       matrix:
         file: ${{ fromJson(needs.frontend_e2e_find_files.outputs.files) }}
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - uses: bahmutov/npm-install@v1
       - name: Generate svelte data
         run: |
