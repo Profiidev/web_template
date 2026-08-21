@@ -6,6 +6,7 @@ exclude = [
   "release.yml",
   "auto-merge-release.yml",
   "create-release.yml",
+  ".github/workflows/tests.yml",
   "frontend/src/routes/account/general/+page.svelte",
   "frontend/src/routes/groups/+page.svelte",
   "frontend/src/routes/password/reset/+page.svelte",
