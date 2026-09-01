@@ -20,21 +20,21 @@ vi.mock('$app/navigation', () => ({
 }));
 
 vi.mock('$app/stores', async () => {
-  const { readable } = await import('svelte/store');
-  const page = readable({
-    data: {},
-    error: null,
-    form: null,
-    params: {},
-    route: { id: null },
-    status: 200,
-    url: new URL('http://localhost/')
-  });
-  const navigating = readable(null);
-  const updated = {
-    check: async () => Promise.resolve(false),
-    subscribe: readable(false).subscribe
-  };
+  const { readable } = await import('svelte/store'),
+    page = readable({
+      data: {},
+      error: null,
+      form: null,
+      params: {},
+      route: { id: null },
+      status: 200,
+      url: new URL('http://localhost/')
+    }),
+    navigating = readable(null),
+    updated = {
+      check: async () => Promise.resolve(false),
+      subscribe: readable(false).subscribe
+    };
   return {
     getStores: () => ({ navigating, page, updated }),
     navigating,
