@@ -1,20 +1,19 @@
 import type { BrowserContext } from '@playwright/test';
 import type { Scenario } from '../mocks/e2e/data';
 
-const URL = 'http://localhost:4173';
-
-/**
- * Mirrors a cookie into `document.cookie` for every page in the context. The
- * e2e MSW handlers read `mock_scenario` / `mock_setup` from the *client-side*
- * request cookies; WebKit does not reliably expose context cookies to those
- * intercepted fetches, so we also seed them through an init script to make the
- * scenario deterministic across every browser project.
- */
-const seedDocumentCookie = async (context: BrowserContext, cookie: string) =>
-  context.addInitScript((value) => {
-    // oxlint-disable-next-line no-document-cookie
-    document.cookie = `${value}; path=/`;
-  }, cookie);
+const URL = 'http://localhost:4173',
+  /**
+   * Mirrors a cookie into `document.cookie` for every page in the context. The
+   * e2e MSW handlers read `mock_scenario` / `mock_setup` from the *client-side*
+   * request cookies; WebKit does not reliably expose context cookies to those
+   * intercepted fetches, so we also seed them through an init script to make the
+   * scenario deterministic across every browser project.
+   */
+  seedDocumentCookie = async (context: BrowserContext, cookie: string) =>
+    context.addInitScript((value) => {
+      // oxlint-disable-next-line no-document-cookie
+      document.cookie = `${value}; path=/`;
+    }, cookie);
 
 /**
  * Seeds the auth cookie (so protected routes don't redirect to /login) and the
