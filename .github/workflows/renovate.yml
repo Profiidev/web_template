@@ -6,8 +6,8 @@ on:
     branches:
       - main
   schedule:
-    - cron: '45 1 * * 1' # every Monday at 1:45 AM
-    - cron: '45 1 1 * *' # every first day of the month at 1:45 AM
+    - cron: "10 0 * * 1" # every Monday at 0:10 AM
+    - cron: "10 0 1 * *" # every first day of the month at 0:10 AM
   issues:
     types:
       - edited
