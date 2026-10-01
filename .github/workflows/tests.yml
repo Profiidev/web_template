@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # stable
+      - uses: dtolnay/rust-toolchain@6bed0761d98439e5a578e2877258200ad565ba87 # stable
         with:
           components: clippy,rustfmt
 
@@ -19,7 +19,7 @@ jobs:
           cache-on-failure: true
           shared-key: "backend_test_cache"
 
-      - uses: taiki-e/install-action@14ff41b41703c458277b44f1018efc7d5b715234 # nextest
+      - uses: taiki-e/install-action@badb8c3638e0b773c6c17a6025c2306a8f1c4303 # nextest
       - name: "Backend Test"
         run: cd backend && cargo nextest run --all-features --nff
 
