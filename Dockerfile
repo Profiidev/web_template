@@ -26,7 +26,7 @@ COPY frontend/static ./static
 
 RUN npm run build
 
-FROM ghcr.io/profiidev/images/rust-gnu-builder:main@sha256:ff57874d1ac77b2bde727c89e113ac21eb6b001f77c859fed6b31f008a1acfd8 AS backend-planner
+FROM ghcr.io/profiidev/images/rust-gnu-builder:main@sha256:58cb837025f0f8eb4b256b8a2ef0ef93958961ba6835123578d8b0c338a974a8 AS backend-planner
 
 ARG TARGET
 ARG RUSTFLAGS
@@ -41,7 +41,7 @@ RUN \
   --mount=type=cache,target=/app/target \
   cargo chef prepare --recipe-path recipe.json --bin backend
 
-FROM ghcr.io/profiidev/images/rust-gnu-builder:main@sha256:ff57874d1ac77b2bde727c89e113ac21eb6b001f77c859fed6b31f008a1acfd8 AS backend-builder
+FROM ghcr.io/profiidev/images/rust-gnu-builder:main@sha256:58cb837025f0f8eb4b256b8a2ef0ef93958961ba6835123578d8b0c338a974a8 AS backend-builder
 
 ARG TARGET
 ARG RUSTFLAGS
