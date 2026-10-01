@@ -47,5 +47,5 @@ test = ["centaurus/test"]
 [dev-dependencies]
 tokio = { version = "=1.53.1", features = ["macros", "rt-multi-thread"] }
 tower = { version = "=0.5.3", features = ["util"] }
-reqwest = { version = "=0.13.4", features = ["form", "json"] }
+reqwest = { version = "=0.13.5", features = ["form", "json"] }
 serde_json = "=1.0.151"
