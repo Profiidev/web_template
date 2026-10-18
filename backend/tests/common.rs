@@ -8,6 +8,9 @@
 //! [`prepare_env`] is isolated per test, so the shared `sqlite::memory:`
 //! database never leaks between tests.
 //!
+//! [`TestServer::start_pg`] boots the same server against a throwaway postgres
+//! container (testcontainers, needs Docker) instead of sqlite.
+//!
 //! The server sets its auth cookies with the `Secure` flag, which `reqwest`'s
 //! own cookie store refuses to persist over plain HTTP. We therefore keep a
 //! tiny cookie jar of our own ([`TestServer`]) that captures every
@@ -34,6 +37,10 @@ use std::{
 use backend::App;
 use reqwest::{Client, RequestBuilder, Response};
 use serde_json::Value;
+use testcontainers_modules::{
+  postgres::Postgres,
+  testcontainers::{ContainerAsync, ImageExt, runners::AsyncRunner},
+};
 use tokio::{spawn, time::sleep};
 
 /// The auth cookie centaurus sets on a successful login/setup.
@@ -58,6 +65,8 @@ pub struct TestServer {
   pub port: u16,
   client: Client,
   cookies: Mutex<HashMap<String, String>>,
+  /// Postgres container the server depends on; kept alive as long as the server.
+  _pg: Option<ContainerAsync<Postgres>>,
 }
 
 impl TestServer {
@@ -65,7 +74,30 @@ impl TestServer {
   /// become ready.
   pub async fn start() -> TestServer {
     prepare_env();
+    TestServer::boot(None).await
+  }
 
+  /// Boot a fresh server backed by a throwaway postgres container (same major
+  /// version as production) instead of sqlite.
+  pub async fn start_pg() -> TestServer {
+    prepare_env();
+    let container = Postgres::default()
+      .with_tag("18-alpine")
+      .start()
+      .await
+      .expect("start postgres container");
+    let url = format!(
+      "postgres://postgres:postgres@{}:{}/postgres",
+      container.get_host().await.unwrap(),
+      container.get_host_port_ipv4(5432).await.unwrap()
+    );
+    unsafe {
+      std::env::set_var("DB_URL", url);
+    }
+    TestServer::boot(Some(container)).await
+  }
+
+  async fn boot(pg: Option<ContainerAsync<Postgres>>) -> TestServer {
     let app = App::new().await;
     let port = app.port();
     spawn(app.run());
@@ -80,6 +112,7 @@ impl TestServer {
       port,
       client,
       cookies: Mutex::new(HashMap::new()),
+      _pg: pg,
     };
 
     // Wait until the server is accepting requests.
