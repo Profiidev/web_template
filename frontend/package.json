@@ -31,7 +31,7 @@
     "@msw/playwright": "0.6.7",
     "@playwright/test": "=1.61.1",
     "@sveltejs/adapter-node": "5.5.7",
-    "@sveltejs/kit": "2.70.3",
+    "@sveltejs/kit": "3.1.0",
     "@sveltejs/vite-plugin-svelte": "7.3.1",
     "@tailwindcss/vite": "4.3.3",
     "@testing-library/jest-dom": "7.0.1",
