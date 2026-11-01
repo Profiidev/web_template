@@ -18,7 +18,7 @@ services:
     #command: npm i
 
   backend:
-    image: ghcr.io/profiidev/images/rust-musl-watch:main@sha256:835dc0aeec70be66e78132969d1cf485a9b843a4e3204aab4426b5f6e034c931
+    image: ghcr.io/profiidev/images/rust-musl-watch:main@sha256:75520ac615ecee80262bde9954e9c440db9be2d9aecd3769158b43e664c765d0
     user: '${HOST_UID:-0}:${HOST_GID:-0}'
     volumes:
       - ./backend:/app
@@ -34,7 +34,7 @@ services:
         condition: service_healthy
 
   postgres:
-    image: postgres:18@sha256:5a5a84b19854a9ffaa54082c166ff4ec27473a361e496e5ea167f298f2da9722
+    image: postgres:18@sha256:3a4264520e121176619f54ff867d12774bc81e95e7b84db58d63bccdb6144b81
     restart: unless-stopped
     volumes:
       - ./postgres:/var/lib/postgresql
