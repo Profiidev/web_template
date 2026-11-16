@@ -30,7 +30,7 @@
     "@hey-api/openapi-ts": "0.99.0",
     "@msw/playwright": "0.7.0",
     "@playwright/test": "=1.64.1",
-    "@sveltejs/adapter-node": "5.5.7",
+    "@sveltejs/adapter-node": "5.5.8",
     "@sveltejs/kit": "2.70.3",
     "@sveltejs/vite-plugin-svelte": "7.3.1",
     "@tailwindcss/vite": "4.3.3",
