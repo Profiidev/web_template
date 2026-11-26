@@ -4,11 +4,11 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-centaurus = { version = "0.17.0", features = ["uuid"] }
-uuid = { version = "1.24.0", features = ["v4"] }
+centaurus = { version = "0.17.10", features = ["uuid"] }
+uuid = { version = "1.29.3", features = ["v4"] }
 entity = { path = "entity" }
 migration = { path = "migration" }
-sea-orm = { version = "2.0.1", features = [
+sea-orm = { version = "2.0.4", features = [
   "sqlx-postgres",
   "sqlx-sqlite",
   "runtime-tokio-rustls"
@@ -17,13 +17,13 @@ axum = { version = "0.8.9", features = ["macros", "ws", "tracing"] }
 axum-extra = { version = "0.12.6", features = ["cookie", "typed-header"] }
 tracing = "0.1.44"
 tower = "0.5.3"
-tower-http = { version = "0.7.0", features = ["cors", "trace"] }
-tokio = { version = "1.53.1", features = ["signal"] }
+tower-http = { version = "0.7.1", features = ["cors", "trace"] }
+tokio = { version = "1.54.1", features = ["signal"] }
 http = "1.5.0"
 dotenvy = "0.15.7"
 serde = { version = "1.0.229", features = ["derive"] }
 figment = { version = "0.10.19", features = ["env"] }
-hyper-util = { version = "0.1.20", features = ["client-legacy"] }
+hyper-util = { version = "0.1.21", features = ["client-legacy"] }
 aide = { version = "0.16.0-alpha.4", features = [
   "axum",
   "axum-json",
@@ -35,7 +35,7 @@ aide = { version = "0.16.0-alpha.4", features = [
   "axum-extra-headers",
   "macros"
 ] }
-schemars = { version = "1.2.2", features = ["uuid1", "chrono04", "url2"] }
+schemars = { version = "1.2.3", features = ["uuid1", "chrono04", "url2"] }
 
 [[bin]]
 name = "backend"
