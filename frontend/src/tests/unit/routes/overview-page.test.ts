@@ -1,12 +1,12 @@
 import { describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/svelte';
-import * as client from '$lib/client';
+import * as client from '#lib/client/index.ts';
 
-vi.mock('$lib/client', () => ({
+vi.mock('#lib/client/index.ts', () => ({
   testDummy: vi.fn(async () => ({ data: 'Test' }))
 }));
 
-const Page = (await import('$routes/+page.svelte')).default;
+const Page = (await import('#routes/+page.svelte')).default;
 
 describe('overview page', () => {
   it('shows the loading state while the dummy request is pending', () => {

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { testDummy } from '$lib/client';
+  import { testDummy } from '#lib/client/index.ts';
 
   let text = testDummy({
     parseAs: 'text'

@@ -1,5 +1,5 @@
-import { browser } from '$app/environment';
-import type { CreateClientConfig } from '$lib/client/client.gen';
+import { browser } from '$app/env';
+import type { CreateClientConfig } from '#lib/client/client.gen.ts';
 
 export const createClientConfig: CreateClientConfig = (config) => ({
   ...config,

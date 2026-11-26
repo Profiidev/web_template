@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { createClientConfig } from '$lib/backend/config';
+import { createClientConfig } from '#lib/backend/config.ts';
 
 describe('createClientConfig', () => {
   it('preserves the incoming config and pins a baseUrl', () => {

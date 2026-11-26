@@ -1,5 +1,5 @@
 import { beforeAll } from 'vitest';
-import { client as appClient } from '$lib/client/client.gen';
+import { client as appClient } from '#lib/client/client.gen.ts';
 
 // In the browser the client uses relative `/api/...` URLs, but Node's `fetch`
 // (used under jsdom) rejects relative URLs, so requests must be absolute. Pin a

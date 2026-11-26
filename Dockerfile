@@ -20,7 +20,7 @@ RUN npm ci
 ARG FRONTEND_URL
 ARG BACKEND_URL
 
-COPY frontend/svelte.config.js frontend/tsconfig.json frontend/vite.config.ts ./
+COPY frontend/tsconfig.json frontend/vite.config.ts ./
 COPY frontend/src ./src
 COPY frontend/static ./static
 
