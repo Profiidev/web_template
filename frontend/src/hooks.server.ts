@@ -1,5 +1,5 @@
-import type { Handle, HandleFetch } from '@sveltejs/kit';
-import { BACKEND_URL } from '$env/static/private';
+import type { Handle, HandleFetch } from '@sveltejs/kit/hooks';
+import { BACKEND_URL } from '$app/env/private';
 
 const backendUrl = new URL(BACKEND_URL);
 

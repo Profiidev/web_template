@@ -3,6 +3,12 @@
   "version": "0.0.1",
   "private": true,
   "type": "module",
+  "imports": {
+    "#lib/*": "./src/lib/*",
+    "#mocks/*": "./src/tests/mocks/*",
+    "#routes/*": "./src/routes/*",
+    "#test_helpers/*": "./src/tests/_helpers/*"
+  },
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
@@ -21,7 +27,7 @@
   },
   "dependencies": {
     "@lucide/svelte": "^1.81.0",
-    "@profidev/pleiades": "^1.14.1",
+    "@profidev/pleiades": "^1.15.0",
     "@sveltejs/enhanced-img": "1.0.1",
     "valibot": "^1.5.0"
   },
@@ -30,8 +36,8 @@
     "@hey-api/openapi-ts": "0.99.0",
     "@msw/playwright": "0.7.0",
     "@playwright/test": "=1.64.1",
-    "@sveltejs/adapter-node": "5.5.8",
-    "@sveltejs/kit": "2.70.4",
+    "@sveltejs/adapter-node": "6.0.6",
+    "@sveltejs/kit": "3.4.1",
     "@sveltejs/vite-plugin-svelte": "7.3.2",
     "@tailwindcss/vite": "4.3.5",
     "@testing-library/jest-dom": "8.0.0",

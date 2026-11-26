@@ -1,8 +1,8 @@
 import { vi } from 'vitest';
 
 // Global stubs for SvelteKit's `$app/*` modules so components built on
-// Sveltekit-superforms (which call `beforeNavigate`, subscribe to the `page`
-// Store, etc.) can render under jsdom. Individual tests may still override
+// Sveltekit-superforms (which call `beforeNavigate`, read `page` state, etc.)
+// Can render under jsdom. Individual tests may still override
 // `$app/navigation` with their own `vi.mock` to assert navigation calls.
 
 vi.mock('$app/navigation', () => ({
@@ -16,32 +16,9 @@ vi.mock('$app/navigation', () => ({
   preloadCode: vi.fn(async () => Promise.resolve()),
   preloadData: vi.fn(async () => Promise.resolve()),
   pushState: vi.fn(),
+  refreshAll: vi.fn(async () => Promise.resolve()),
   replaceState: vi.fn()
 }));
-
-vi.mock('$app/stores', async () => {
-  const { readable } = await import('svelte/store'),
-    page = readable({
-      data: {},
-      error: null,
-      form: null,
-      params: {},
-      route: { id: null },
-      status: 200,
-      url: new URL('http://localhost/')
-    }),
-    navigating = readable(null),
-    updated = {
-      check: async () => Promise.resolve(false),
-      subscribe: readable(false).subscribe
-    };
-  return {
-    getStores: () => ({ navigating, page, updated }),
-    navigating,
-    page,
-    updated
-  };
-});
 
 vi.mock('$app/state', () => ({
   navigating: { complete: Promise.resolve(), from: null, to: null, type: null },

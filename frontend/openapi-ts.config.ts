@@ -22,7 +22,7 @@ export default defineConfig({
     {
       baseUrl: '',
       name: '@hey-api/client-fetch',
-      runtimeConfigPath: '$lib/backend/config'
+      runtimeConfigPath: '#lib/backend/config.ts'
     },
     {
       name: 'msw'

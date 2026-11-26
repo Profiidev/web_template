@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 
-vi.mock('$env/static/private', () => ({ BACKEND_URL: 'http://backend:9000' }));
+vi.mock('$app/env/private', () => ({ BACKEND_URL: 'http://backend:9000' }));
 
-const { handle, handleFetch } = await import('../../hooks.server'),
+const { handle, handleFetch } = await import('../../hooks.server.ts'),
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   anyArg = (v: unknown) => v as any;
 

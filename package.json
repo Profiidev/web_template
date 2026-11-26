@@ -3,12 +3,17 @@
     "frontend"
   ],
   "devDependencies": {
-    "cookie": "0.7.2",
+    "@sveltejs/kit": "3.4.1",
     "oxfmt": "0.80.0",
     "oxlint": "1.95.0",
     "oxlint-tsgolint": "7.0.2008",
     "prettier-plugin-svelte": "4.2.0",
     "prettier-plugin-tailwindcss": "0.8.1"
+  },
+  "overrides": {
+    "runed": {
+      "@sveltejs/kit": "$@sveltejs/kit"
+    }
   },
   "allowScripts": {
     "sharp": true,
